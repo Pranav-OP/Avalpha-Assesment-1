@@ -29,6 +29,13 @@ namespace AvalphaTechnologies.CommissionCalculator
                 app.UseSwaggerUI();
             }
 
+            // enable CORS
+            app.UseCors(policy =>
+            policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin());
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
