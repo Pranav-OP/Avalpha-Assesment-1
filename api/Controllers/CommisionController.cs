@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using AvalphaTechnologies.CommissionCalculator.Services;
+using AvalphaTechnologies.CommissionCalculator.Models;
 
 namespace AvalphaTechnologies.CommissionCalculator.Controllers
 {
@@ -6,28 +8,20 @@ namespace AvalphaTechnologies.CommissionCalculator.Controllers
     [Route("[controller]")]
     public class CommisionController : ControllerBase
     {
-        [ProducesResponseType(typeof(CommissionCalculationResponse), 200)]
-        [HttpPost]
-        public IActionResult Calculate(CommissionCalculationRequest calculationRequest)
+        private readonly ICommissionCalculator _calculator;
+
+        public CommisionController(ICommissionCalculator calculator)
         {
-            return Ok(new CommissionCalculationResponse() { 
-                AvalphaTechnologiesCommissionAmount = 999,
-                CompetitorCommissionAmount = 100
-            });
+            _calculator = calculator;
+        }
+
+        [HttpPost("calculate")]
+        [ProducesResponseType(typeof(CommissionCalculationResponse), 200)]
+        public IActionResult Calculate([FromBody] CommissionCalculationRequest request)
+        {
+            var result = _calculator.Calculate(request);
+            return Ok(result);
         }
     }
 
-    public class CommissionCalculationRequest
-    {
-        public int LocalSalesCount { get; set; }
-        public int ForeignSalesCount { get; set; }
-        public decimal AverageSaleAmount { get; set; }
-    }
-
-    public class CommissionCalculationResponse
-    {
-        public decimal AvalphaTechnologiesCommissionAmount { get; set; }
-
-        public decimal CompetitorCommissionAmount { get; set; }
-    }
 }

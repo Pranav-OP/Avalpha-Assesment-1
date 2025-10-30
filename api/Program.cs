@@ -1,4 +1,8 @@
 
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+using AvalphaTechnologies.CommissionCalculator.Services;
+
 namespace AvalphaTechnologies.CommissionCalculator
 {
     public class Program
@@ -10,9 +14,11 @@ namespace AvalphaTechnologies.CommissionCalculator
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Register commission calculator service
+            builder.Services.AddScoped<ICommissionCalculator, CommissionCalculatorService>();
 
             var app = builder.Build();
 
@@ -24,10 +30,8 @@ namespace AvalphaTechnologies.CommissionCalculator
             }
 
             app.UseHttpsRedirection();
-
+            app.UseRouting();
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
